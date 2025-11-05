@@ -2,6 +2,16 @@
 
 Esta pasta contém 4 exercícios práticos de Docker, organizados de forma progressiva.
 
+## IMPORTANTE: Antes de Começar
+
+**Certifique-se de que o Docker Desktop está rodando!**
+
+1. Abra o Docker Desktop
+2. Aguarde até o ícone ficar verde
+3. Teste com: `docker --version`
+
+Se o Docker não estiver instalado, baixe em: https://www.docker.com/products/docker-desktop
+
 ## Estrutura dos Exercícios
 
 ```
@@ -23,11 +33,15 @@ Branch: `exercicio-1`
 
 ```bash
 cd docker/exercicio-1
-docker build -t exercicio-1-nodejs .
-docker run -p 3000:3000 exercicio-1-nodejs
+docker-compose up -d
 ```
 
 Acesse: http://localhost:3000
+
+Para parar:
+```bash
+docker-compose down
+```
 
 ---
 
@@ -40,11 +54,15 @@ Branch: `exercicio-2`
 
 ```bash
 cd docker/exercicio-2
-docker build -t exercicio-2-flask .
-docker run -p 5000:5000 exercicio-2-flask
+docker-compose up -d
 ```
 
 Acesse: http://localhost:5000
+
+Para parar:
+```bash
+docker-compose down
+```
 
 ---
 
@@ -64,6 +82,11 @@ Acessos:
 - API: http://localhost:8000
 - Adminer: http://localhost:8080
 
+Para parar:
+```bash
+docker-compose down
+```
+
 ---
 
 ### Exercício 4: Persistência com Docker Volumes
@@ -79,6 +102,11 @@ docker-compose up -d
 ```
 
 Acesse: http://localhost:9000
+
+Para parar:
+```bash
+docker-compose down
+```
 
 ---
 
@@ -272,6 +300,35 @@ docker system prune -a
 - [Docker Community Forums](https://forums.docker.com/)
 - [Stack Overflow - Docker](https://stackoverflow.com/questions/tagged/docker)
 
+## Comandos Rápidos
+
+### Para todos os exercícios
+
+Iniciar:
+```bash
+docker-compose up -d
+```
+
+Ver logs:
+```bash
+docker-compose logs -f
+```
+
+Parar:
+```bash
+docker-compose down
+```
+
+Reconstruir e iniciar:
+```bash
+docker-compose up -d --build
+```
+
+Ver containers rodando:
+```bash
+docker ps
+```
+
 ## Troubleshooting
 
 ### Docker Desktop não inicia
@@ -284,20 +341,15 @@ docker system prune -a
 # Verificar o que está usando a porta
 netstat -ano | findstr :3000
 
-# Usar outra porta
-docker run -p 3001:3000 imagem
+# Parar o container que está usando
+docker-compose down
 ```
 
-### Permissão negada
+### Erro ao construir
 ```bash
-# Adicione seu usuário ao grupo docker (Linux)
-sudo usermod -aG docker $USER
-```
-
-### Imagem não encontrada
-```bash
-# Construa a imagem primeiro
-docker build -t nome-imagem .
+# Reconstruir sem cache
+docker-compose build --no-cache
+docker-compose up -d
 ```
 
 ## Próximos Passos
