@@ -1,44 +1,49 @@
-﻿services:
-  api:
-    build: .
-    container_name: exercicio-2-api
+services:
+  web:
+    build:
+      context: ./web
+      target: prod
+    container_name: todo-api-prod
     ports:
-      - "5000:5000"
+      - "8000:8000"
     environment:
       - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=tododb
       - DB_USER=postgres
-      - DB_PASS=postgres123
-      - DB_NAME=apidb
-      - PYTHONUNBUFFERED=1
+      - DB_PASSWORD=postgres123
+      - FLASK_ENV=production
     depends_on:
       db:
         condition: service_healthy
     networks:
-      - api-network
+      - app-network
     restart: unless-stopped
 
   db:
     image: postgres:15-alpine
-    container_name: exercicio-2-db
+    container_name: todo-db-prod
     environment:
+      - POSTGRES_DB=tododb
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres123
-      - POSTGRES_DB=apidb
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
     networks:
-      - api-network
+      - app-network
+    restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
-    restart: unless-stopped
+
+
 
 volumes:
-  db-data:
-    driver: local
+  postgres-data:
 
 networks:
-  api-network:
+  app-network:
     driver: bridge

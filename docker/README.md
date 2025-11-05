@@ -18,8 +18,8 @@ Se o Docker não estiver instalado, baixe em: https://www.docker.com/products/do
 docker/
 ├── exercicio-1/     # Hello World com Node.js
 ├── exercicio-2/     # API REST com Python Flask
-├── exercicio-3/     # Multi-container com Docker Compose
-└── exercicio-4/     # Persistência com Docker Volumes
+├── exercicio-3/     # Boas Práticas + Múltiplos Ambientes (dev/prod)
+└── exercicio-4/     # Desafio Extra - Stack Completa (API + DB + Adminer)
 ```
 
 ## Exercícios
@@ -45,10 +45,10 @@ docker-compose down
 
 ---
 
-### Exercício 2: API REST com Python Flask
-Conceitos: API REST, Python em containers, Gerenciamento de dependências
+### Exercício 2: API REST com Python Flask + PostgreSQL
+Conceitos: API REST, Python em containers, Banco de dados, Variáveis de ambiente
 
-API REST completa com operações CRUD.
+API REST completa com operações CRUD conectada ao PostgreSQL.
 
 Branch: `exercicio-2`
 
@@ -57,7 +57,9 @@ cd docker/exercicio-2
 docker-compose up -d
 ```
 
-Acesse: http://localhost:5000
+Acessos:
+- API: http://localhost:5000
+- Health Check: http://localhost:5000/health
 
 Para parar:
 ```bash
@@ -66,42 +68,63 @@ docker-compose down
 
 ---
 
-### Exercício 3: Multi-container com Docker Compose
-Conceitos: Docker Compose, Redes, Banco de dados, Orquestração
+### Exercício 3: Boas Práticas + Múltiplos Ambientes
+Conceitos: Multi-stage builds, Ambientes dev/prod, Otimização, Live reload
 
-Aplicação To-Do List com Flask + PostgreSQL + Adminer.
+Aplicação To-Do com Flask + PostgreSQL + Adminer em dois ambientes:
+- **dev**: com live reload e volume montado
+- **prod**: build otimizado e imagem leve
 
 Branch: `exercicio-3`
 
+Ambiente de Desenvolvimento:
 ```bash
 cd docker/exercicio-3
-docker-compose up -d
+docker-compose -f docker-compose.dev.yml up -d
+```
+
+Ambiente de Produção:
+```bash
+cd docker/exercicio-3
+docker-compose -f docker-compose.prod.yml up -d
 ```
 
 Acessos:
-- API: http://localhost:8000
+- API: http://localhost:5001
 - Adminer: http://localhost:8080
 
 Para parar:
 ```bash
-docker-compose down
+docker-compose -f docker-compose.dev.yml down
+# ou
+docker-compose -f docker-compose.prod.yml down
 ```
 
 ---
 
-### Exercício 4: Persistência com Docker Volumes
-Conceitos: Volumes, Persistência, Backup, Named/Bind mounts
+### Exercício 4: Desafio Extra - Stack Completa
+Conceitos: Arquitetura completa, API customizada, Healthchecks, Networks
 
-Upload de arquivos com diferentes tipos de volumes.
+Stack profissional com API customizada + PostgreSQL + Adminer.
 
 Branch: `exercicio-4`
 
 ```bash
 cd docker/exercicio-4
-docker-compose up -d
+docker-compose up -d --build
 ```
 
-Acesse: http://localhost:9000
+Acessos:
+- API: http://localhost:5000
+- Health Check: http://localhost:5000/health
+- Adminer: http://localhost:8080
+
+Credenciais Adminer:
+- System: PostgreSQL
+- Server: db
+- Username: postgres
+- Password: postgres123
+- Database: stackdb
 
 Para parar:
 ```bash
@@ -152,10 +175,10 @@ docker run -p 3000:3000 ex1
 
 ## Ordem Recomendada
 
-1. Exercício 1: Fundamentos de containers
-2. Exercício 2: Aplicações reais
-3. Exercício 3: Múltiplos containers
-4. Exercício 4: Persistência de dados
+1. **Exercício 1**: Fundamentos - Dockerfile básico e containers
+2. **Exercício 2**: API + Banco - Aplicação real com PostgreSQL
+3. **Exercício 3**: Ambientes - Boas práticas dev/prod
+4. **Exercício 4**: Desafio - Stack completa profissional
 
 Siga esta ordem para melhor aproveitamento.
 
@@ -172,9 +195,9 @@ Siga esta ordem para melhor aproveitamento.
 | Exercício | Dificuldade | Tempo | Conceitos |
 |-----------|-------------|-------|-----------|
 | 1 | Iniciante | 30min | Dockerfile, Build, Run |
-| 2 | Iniciante | 45min | API, Dependencies |
-| 3 | Intermediário | 60min | Compose, Networks, DB |
-| 4 | Intermediário | 60min | Volumes, Persistence |
+| 2 | Iniciante | 45min | API + DB, PostgreSQL |
+| 3 | Intermediário | 60min | Multi-stage, dev/prod |
+| 4 | Avançado | 90min | Stack completa, Healthchecks |
 
 ## O Que Você Vai Aprender
 
@@ -187,23 +210,24 @@ Siga esta ordem para melhor aproveitamento.
 
 ### Exercício 2
 - Containerizar aplicações Python
-- Gerenciar dependências
+- Conectar API ao PostgreSQL
 - Variáveis de ambiente
-- APIs em containers
+- Healthchecks
+- Docker Compose com múltiplos serviços
 
 ### Exercício 3
-- Docker Compose
-- Multi-container
-- Redes Docker
-- Banco de dados
-- Orquestração
+- Multi-stage builds
+- Ambientes dev/prod separados
+- Live reload em desenvolvimento
+- Otimização de imagens
+- Boas práticas de build
 
 ### Exercício 4
-- Named volumes
-- Bind mounts
-- Persistência
-- Backup e restore
-- Gerenciamento de dados
+- Arquitetura de microserviços
+- API customizada com Dockerfile
+- Healthchecks avançados
+- Networks e depends_on
+- Stack profissional completa
 
 ## Comandos Úteis
 

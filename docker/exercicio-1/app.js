@@ -9,13 +9,7 @@ app.use(express.json());
 
 // Rota principal
 app.get('/', (req, res) => {
-  res.json({
-    message: 'Hello World from Docker!',
-    timestamp: new Date().toISOString(),
-    container: os.hostname(),
-    platform: os.platform(),
-    nodeVersion: process.version
-  });
+  res.send('Hello from Docker!');
 });
 
 // Rota de health check

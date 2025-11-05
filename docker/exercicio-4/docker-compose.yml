@@ -1,29 +1,57 @@
-version: '3.8'
-
-services:
-  # Aplicação de upload de arquivos
-  app:
-    build: ./app
-    container_name: file-storage-app
+﻿services:
+  api:
+    build: ./api
+    container_name: stack-api
     ports:
-      - "9000:9000"
-    volumes:
-      # Named volume - dados persistentes da aplicação
-      - app-data:/app/data
-      
-      # Bind mount - uploads acessíveis no host
-      - ./data/uploads:/app/uploads
-      
-      # Anonymous volume - logs temporários
-      - /app/logs
+      - "5000:5000"
     environment:
-      - UPLOAD_FOLDER=/app/uploads
-      - DATA_FOLDER=/app/data
-      - MAX_FILE_SIZE=10485760
+      - DB_HOST=db
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_NAME=${DB_NAME}
+      - PORT=5000
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - stack-network
+    restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    container_name: stack-db
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - stack-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  adminer:
+    image: adminer:latest
+    container_name: stack-adminer
+    ports:
+      - "8080:8080"
+    environment:
+      - ADMINER_DEFAULT_SERVER=db
+    depends_on:
+      - db
+    networks:
+      - stack-network
     restart: unless-stopped
 
 volumes:
-  # Named volume gerenciado pelo Docker
-  app-data:
-    name: file-storage-data
+  db-data:
     driver: local
+
+networks:
+  stack-network:
+    driver: bridge
