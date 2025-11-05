@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  # Aplicação de upload de arquivos
+  app:
+    build: ./app
+    container_name: file-storage-app
+    ports:
+      - "9000:9000"
+    volumes:
+      # Named volume - dados persistentes da aplicação
+      - app-data:/app/data
+      
+      # Bind mount - uploads acessíveis no host
+      - ./data/uploads:/app/uploads
+      
+      # Anonymous volume - logs temporários
+      - /app/logs
+    environment:
+      - UPLOAD_FOLDER=/app/uploads
+      - DATA_FOLDER=/app/data
+      - MAX_FILE_SIZE=10485760
+    restart: unless-stopped
+
+volumes:
+  # Named volume gerenciado pelo Docker
+  app-data:
+    name: file-storage-data
+    driver: local

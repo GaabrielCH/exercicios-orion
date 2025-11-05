@@ -1,0 +1,23 @@
+{
+  "name": "exercicio-1-docker",
+  "version": "1.0.0",
+  "description": "Hello World com Docker e Node.js",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [
+    "docker",
+    "nodejs",
+    "express"
+  ],
+  "author": "Gabriel CH",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
