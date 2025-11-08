@@ -86,11 +86,27 @@ Isso iniciará:
 
 📁 Pasta: `exercicio-4/`
 
+## Execução dos Exercícios
+
+Todos os exercícios foram testados e executados com sucesso usando PowerShell no Windows. Os comandos incluem formatação com `Write-Host` para melhor visualização dos resultados.
+
+### Exercício 1: SQL Básico
+Criadas tabelas `cursos` e `alunos` com foreign key. Inseridos 3 cursos e 4 alunos. Screenshots mostram a estrutura das tabelas e os dados inseridos.
+
+### Exercício 2: SQL JOINs
+Testados INNER JOIN, WHERE, UPDATE e LEFT JOIN. Maria Santos foi movida do curso de Desenvolvimento Web para Ciência de Dados. Screenshots mostram os resultados de cada query.
+
+### Exercício 3: NoSQL CRUD
+Inseridos 2 posts demonstrando schema flexível. Post do Gabriel sem tags, post da Maria com array de 4 tags. Screenshots mostram a diferença de estrutura.
+
+### Exercício 4: NoSQL Avançado
+Adicionado array de comentários aninhado. Testados operadores `$elemMatch`, `$all`, `distinct`, projeções. Screenshots mostram queries complexas funcionando.
+
 ## Comandos Úteis
 
 ### Docker Compose
 
-```bash
+```powershell
 # Iniciar os bancos
 docker compose up -d
 
@@ -107,9 +123,12 @@ docker compose down -v
 docker compose ps
 ```
 
-### PostgreSQL (via terminal)
+### PostgreSQL
 
-```bash
+```powershell
+# Executar script SQL
+Get-Content solucao.sql | docker exec -i orion_postgres_db psql -U orion_user -d orion_db
+
 # Conectar ao PostgreSQL
 docker exec -it orion_postgres_db psql -U orion_user -d orion_db
 
@@ -119,17 +138,20 @@ docker exec -it orion_postgres_db psql -U orion_user -d orion_db
 \q           # Sair
 ```
 
-### MongoDB (via terminal)
+### MongoDB
 
-```bash
+```powershell
+# Executar comandos individuais
+docker exec orion_mongo_db mongosh --authenticationDatabase admin -u orion_admin -p orion_admin_pass orion_blog --eval "db.posts.find().forEach(printjson)"
+
 # Conectar ao MongoDB
-docker exec -it orion_mongo_db mongosh -u orion_admin -p orion_admin_pass
+docker exec -it orion_mongo_db mongosh --authenticationDatabase admin -u orion_admin -p orion_admin_pass
 
 # Dentro do mongosh:
 show dbs                    # Listar bancos
 use orion_blog              # Usar banco
 show collections            # Listar coleções
-db.posts.find().pretty()    # Ver posts
+db.posts.find()             # Ver posts
 exit                        # Sair
 ```
 

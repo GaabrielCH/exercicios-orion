@@ -32,12 +32,35 @@ LEFT JOIN + WHERE para descobrir cursos sem alunos.
 ## Como Executar
 
 ### Via Terminal
-```bash
-docker exec -it orion_postgres_db psql -U orion_user -d orion_db -f /tmp/solucao.sql
+
+```powershell
+# Executar o script completo
+Get-Content solucao.sql | docker exec -i orion_postgres_db psql -U orion_user -d orion_db
+
+# Testar INNER JOIN manualmente
+docker exec -it orion_postgres_db psql -U orion_user -d orion_db -c "SELECT a.nome AS aluno, c.nome_curso AS curso FROM alunos a INNER JOIN cursos c ON a.curso_id = c.id;"
+
+# Verificar UPDATE
+docker exec -it orion_postgres_db psql -U orion_user -d orion_db -c "SELECT a.nome, c.nome_curso FROM alunos a INNER JOIN cursos c ON a.curso_id = c.id WHERE a.nome = 'Maria Santos';"
 ```
 
 ### Via DBeaver/pgAdmin
 1. Conecte ao banco PostgreSQL
 2. Abra o arquivo `solucao.sql`
 3. Execute os comandos um por um
+4. Capture screenshots de cada resultado
+
+### Resultados Esperados
+
+**INNER JOIN**: Lista de alunos com seus cursos
+**WHERE**: Apenas alunos de um curso específico
+**UPDATE**: Maria Santos mudou de curso
+**LEFT JOIN**: Mostra cursos sem alunos
+
+### Screenshots
+
+![Queries gerais](screenshots/exercicio2-printgeral.jpg)
+![Queries extras](screenshots/exercicio2-geralextra.jpg)
+
+As imagens mostram os resultados dos JOINs, filtros WHERE, UPDATE e LEFT JOIN para encontrar cursos sem alunos.
 

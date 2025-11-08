@@ -26,24 +26,40 @@ Usar `find()` ou `find().pretty()`
 ## Como Executar
 
 ### Opção 1: Via MongoDB Compass
-1. Conecte com: `mongodb://orion_admin:orion_admin_pass@localhost:27017/`
+1. Conecte com: `mongodb://orion_admin:orion_admin_pass@localhost:27017/?authSource=admin`
 2. Crie o banco `orion_blog`
 3. Crie a coleção `posts`
 4. Use a interface para inserir e consultar
+5. Capture screenshots mostrando os dois posts com estruturas diferentes
 
-### Opção 2: Via Terminal (mongosh)
-```bash
-# Conectar ao MongoDB
-docker exec -it orion_mongo_db mongosh -u orion_admin -p orion_admin_pass
+### Opção 2: Via Terminal
 
-# Executar os comandos do arquivo solucao.js
+```powershell
+# Inserir primeiro post (sem tags)
+docker exec orion_mongo_db mongosh --authenticationDatabase admin -u orion_admin -p orion_admin_pass orion_blog --eval "db.posts.insertOne({titulo:'Introducao ao MongoDB',autor:'Gabriel CH',conteudo:'MongoDB e um banco NoSQL orientado a documentos'})"
+
+# Inserir segundo post (com tags)
+docker exec orion_mongo_db mongosh --authenticationDatabase admin -u orion_admin -p orion_admin_pass orion_blog --eval "db.posts.insertOne({titulo:'Schema Flexivel no NoSQL',autor:'Maria Santos',conteudo:'NoSQL permite diferentes estruturas na mesma colecao',tags:['nosql','mongodb','flexivel','schema']})"
+
+# Ver todos os posts
+docker exec orion_mongo_db mongosh --authenticationDatabase admin -u orion_admin -p orion_admin_pass orion_blog --eval "db.posts.find().forEach(printjson)"
+
+# Consultar posts SEM tags
+docker exec orion_mongo_db mongosh --authenticationDatabase admin -u orion_admin -p orion_admin_pass orion_blog --eval "db.posts.find({tags:{`$exists:false}}).forEach(printjson)"
+
+# Consultar posts COM tags
+docker exec orion_mongo_db mongosh --authenticationDatabase admin -u orion_admin -p orion_admin_pass orion_blog --eval "db.posts.find({tags:{`$exists:true}}).forEach(printjson)"
 ```
 
-### Opção 3: Executar script diretamente
-```bash
-# Copiar o arquivo para o container
-docker cp solucao.js orion_mongo_db:/tmp/
+### Resultados Esperados
 
-# Executar o script
-docker exec -it orion_mongo_db mongosh -u orion_admin -p orion_admin_pass --file /tmp/solucao.js
-```
+**Post 1** (Gabriel): titulo, autor, conteudo
+**Post 2** (Maria): titulo, autor, conteudo, tags
+
+O segundo documento tem um campo adicional que o primeiro não tem. Isso demonstra o schema flexível do MongoDB.
+
+### Screenshots
+
+![Schema flexível](screenshots/exercicio3-geralteste.jpg)
+
+A imagem mostra os dois documentos com estruturas diferentes na mesma coleção, provando a flexibilidade do schema no MongoDB.
